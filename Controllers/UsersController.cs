@@ -48,5 +48,33 @@ namespace BudgetManagerAPI.Controllers
             return CreatedAtAction(nameof(GetUserById), new { id = user.UserId }, user);
         }
 
+
+        [HttpPut("id:int")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> InsertUser(int id, [FromBody] MUserAccounts parameters)
+        {
+            var function = new DUserAccounts();
+
+            parameters.UserId = id;
+
+            await function.UpdatetUserAccountsAsync(parameters);
+
+            return NoContent();
+        }
+
+
+
+        [HttpDelete("int:id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> deletetUserAccount(int id)
+        {
+            var function = new DUserAccounts();
+
+            await function.DeleteUserAccountAsync(id);
+
+            return Ok();
+        }
+
+
     }
 }

@@ -126,7 +126,44 @@ namespace BudgetManagerAPI.Data
 
 
 
+        public async Task UpdatetUserAccountsAsync(MUserAccounts user)
+        {
+
+            using (var sql = new SqlConnection(cn.StringSQL())) //get a new db connection
+            {
+                using (var cmd = new SqlCommand("sp_UpdateUsers", sql)) //get procedure for execute
+                {
+                    cmd.CommandType = CommandType.StoredProcedure; //specifc type of command
+                    cmd.Parameters.AddWithValue("@UserId", user.UserId);
+                    cmd.Parameters.AddWithValue("@UserName", user.UserName);
+                    cmd.Parameters.AddWithValue("@PasswordHash", user.PasswordHash);
+                    cmd.Parameters.AddWithValue("@Email", user.Email);
+                    cmd.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
+                    await sql.OpenAsync(); //open db connection
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+            }
+
+        }
 
 
+
+
+
+        public async Task DeleteUserAccountAsync(int userId)
+        {
+            using (var sql = new SqlConnection(cn.StringSQL())) //get a new db connection
+            {
+                using (var cmd = new SqlCommand("sp_deleteUsers", sql)) //get procedure for execute
+                {
+                    cmd.CommandType = CommandType.StoredProcedure; //specifc type of command
+                    cmd.Parameters.AddWithValue("@UserId", userId);
+                    await sql.OpenAsync(); //open db connection
+                    await cmd.ExecuteNonQueryAsync();
+                }
+
+            }
+        }
     }
 }

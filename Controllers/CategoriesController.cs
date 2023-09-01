@@ -14,6 +14,7 @@ namespace BudgetManagerAPI.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult> GetAllCategories()
         {
             var function = new DCategories();
@@ -23,16 +24,56 @@ namespace BudgetManagerAPI.Controllers
             return Ok(list);
         }
 
-
-        [HttpPost]
-        public async Task<HttpStatusCode> InsertCategories([FromBody] MCategories parameters)
+        [HttpGet("id:int", Name = "GetCategoYById")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> GetCategoYById(int id)
         {
             var function = new DCategories();
 
-            await function.InsertCategoriesAsync(parameters);
+            MCategories category = await function.GetCategoryByIdAsync(id);
 
-            return HttpStatusCode.Created;
+            return Ok(category);
         }
+
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<ActionResult<MCategories>> InsertCategories([FromBody] MCategories parameters)
+        {
+            var function = new DCategories();
+
+            MCategories category = await function.InsertCategoriesAsync(parameters);
+
+
+            return CreatedAtAction(nameof(GetCategoYById), new { id = category.CategoryId }, category);
+        }
+
+        [HttpPut("id:int")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> UpdateCategory(int id, [FromBody] MCategories parameters)
+        {
+            var function = new DCategories();
+
+            parameters.CategoryId = id;
+
+            await function.UpdateCategoriesAsync(parameters);
+
+            return NoContent();
+        }
+
+
+
+        [HttpDelete("int:id")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult> deletetExpense(int id)
+        {
+            var function = new DCategories();
+
+            await function.DeleteExpenseRegisterAsync(id);
+
+            return Ok();
+        }
+
 
     }
 }
